@@ -8,22 +8,37 @@ bokeh.models.ColumnDataSource.
 The ColumnDataSource is used as the driving data for bokeh.plotting.Figure
 instance call to rect()
 """
+import numpy as np
+import bokeh.models
+import bokeh.plotting
 
 
-def colorbar(color_map):
+__all__ = [
+    "colorbar",
+    "colorbar_figure"
+]
+
+
+def colorbar(color_map, figure=None):
     """Helper to generate a bokeh widget that acts like a colorbar"""
-    # Make a figure suitable to contain a colorbar
-    figure = bokeh.plotting.figure()
-    figure.yaxis.visible = False
-    figure.toolbar_location = None
-    figure.min_border = 20
-
+    if figure is None:
+        figure = colorbar_figure()
     # Relationship between data and colors
     x = np.linspace(x_min, x_max, color_map.N)
     width = x[1] - x[0]
     rgb_colors = rgb(color_map.colors)
     figure.rect(x=x, y=0.5, height=1., width=width,
                 color=rgb_colors)
+    return figure
+
+
+def colorbar_figure():
+    """Colorbar bokeh figure with appropriate hover tool"""
+    # Make a figure suitable to contain a colorbar
+    figure = bokeh.plotting.figure()
+    figure.yaxis.visible = False
+    figure.toolbar_location = None
+    figure.min_border = 20
 
     # Hover tooltip
     hover = bokeh.models.HoverTool()

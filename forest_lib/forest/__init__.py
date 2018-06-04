@@ -14,3 +14,6 @@ import forest.util as util
 import forest.control as control
 import forest.data as data
 import forest.plot as plot
+
+# forest.colorbar.__all__ contents in top-level name space
+from forest.colorbar import *
