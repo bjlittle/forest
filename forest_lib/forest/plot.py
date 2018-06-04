@@ -28,9 +28,13 @@ class MissingDataError(Exception):
 
 
 class ForestPlot(object):
-
     '''
     Main plot class. The plotting function is create_plot().
+
+    .. note:: The return value from a function in self.plot_funcs
+              is stored in self.main_plot, this is typically the
+              output of a pcolormesh or imshow call
+
     '''
     TITLE_TEXT_WIDTH = 40
     PRESSURE_LEVELS_HPA = range(980, 1030, 2)
