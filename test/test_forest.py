@@ -43,3 +43,7 @@ class TestForestPlot(unittest.TestCase):
                 "<img src='fake/app/path/static/fake_plot_var_colorbar.png'\>")
         self.assertEqual(result.height, 100)
         self.assertEqual(result.width, 800)
+
+    def test_update_colorbar_widget(self):
+        # TODO: Add unit test to understand colorbar update call back
+        self.assertTrue(False)
