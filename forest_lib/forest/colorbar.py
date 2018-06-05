@@ -35,7 +35,9 @@ def colorbar(color_map, figure=None):
 def colorbar_figure():
     """Colorbar bokeh figure with appropriate hover tool"""
     # Make a figure suitable to contain a colorbar
-    figure = bokeh.plotting.figure()
+    figure = bokeh.plotting.figure(tools="",
+                                   plot_width=500,
+                                   plot_height=60)
     figure.yaxis.visible = False
     figure.toolbar_location = None
     figure.min_border = 20

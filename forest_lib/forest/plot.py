@@ -909,6 +909,11 @@ class ForestPlot(object):
                                                      )
         return self.stats_widget
 
+    def create_colorbar(self):
+        """Interactive colorbar widget"""
+        self.colorbar_source = bokeh.models.ColumnDataSource()
+        self.colorbar_figure = bokeh.plotting.figure()
+
     def create_colorbar_widget(self):
 
         '''
