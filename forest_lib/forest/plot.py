@@ -16,6 +16,7 @@ import bokeh.plotting
 
 import forest.util
 import forest.data
+import forest.colorbar
 
 
 BOKEH_TOOLS_LIST = ['pan','wheel_zoom','reset','save','box_zoom']

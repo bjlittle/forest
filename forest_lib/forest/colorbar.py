@@ -14,22 +14,50 @@ import bokeh.plotting
 
 
 __all__ = [
-    "colorbar",
+    "Colorbar",
+    "rgb",
+    "source_dict",
     "colorbar_figure"
 ]
 
+class Colorbar(object):
+    """Forest colorbar widget"""
+    def __init__(self, color_map, x_min, x_max, figure=None):
+        """Helper to generate a bokeh widget that acts like a colorbar
+        """
+        if figure is None:
+            self.figure = colorbar_figure()
+        else:
+            self.figure = figure
 
-def colorbar(color_map, figure=None):
-    """Helper to generate a bokeh widget that acts like a colorbar"""
-    if figure is None:
-        figure = colorbar_figure()
-    # Relationship between data and colors
+        # Relationship between data and colors
+        source = bokeh.models.ColumnDataSource(source_dict(color_map,
+                                                           x_min,
+                                                           x_max))
+        figure.rect(x="x",
+                    y=0.5,
+                    height=1.,
+                    width="width",
+                    color="color",
+                    source=source)
+        self.source = source
+
+    def update(self, color_map, x_min, x_max):
+        """Re-render colorbar using different color map and limits"""
+        self.source.data = source_dict(color_map,
+                                       x_min,
+                                       x_max)
+        self.figure.xaxis.range = bokeh.models.Range1d(x_min, x_max)
+
+
+def source_dict(color_map, x_min, x_max):
+    """Create a ColumnDataSource dict from color map and x range"""
     x = np.linspace(x_min, x_max, color_map.N)
-    width = x[1] - x[0]
-    rgb_colors = rgb(color_map.colors)
-    figure.rect(x=x, y=0.5, height=1., width=width,
-                color=rgb_colors)
-    return figure
+    return {
+        "x": x,
+        "width": np.diff(x),
+        "color": rgb(color_map.colors)
+    }
 
 
 def colorbar_figure():

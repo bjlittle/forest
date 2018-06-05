@@ -13,16 +13,13 @@ class TestMatplotlibAPI(unittest.TestCase):
         """matplotlib color map API"""
         x, y = np.linspace(0, 1, 100), np.linspace(0, 1, 100)
         X, Y = np.meshgrid(x, y)
-        Z = X + Y
-        quad_mesh = plt.pcolormesh(X, Y, Z)
+        C = X + Y
+        quad_mesh = plt.pcolormesh(X, Y, C)
         color_map = quad_mesh.get_cmap()
         self.assertEqual(color_map.N, 256)
         self.assertEqual(np.shape(color_map.colors), (256, 3))
-        print(quad_mesh.norm(Z.max()))
-        v = np.linspace(Z.min(), Z.max(), color_map.N,
-                        endpoint=False)
-        self.assertAlmostEqual(quad_mesh.norm.vmin, v.min())
-        self.assertAlmostEqual(quad_mesh.norm.vmax, v.max())
+        self.assertAlmostEqual(quad_mesh.norm.vmin, C.min())
+        self.assertAlmostEqual(quad_mesh.norm.vmax, C.max())
 
 
 class TestForestColorbar(unittest.TestCase):
