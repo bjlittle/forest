@@ -4,7 +4,27 @@ import forest.plot
 
 
 class TestForestPlot(unittest.TestCase):
-    def test_colorbar_support(self):
+    def test_create_colorbar_widget(self):
+        fixture = self.make_forest_plot()
+        result = fixture.create_colorbar_widget()
+        self.assert_div_has(result,
+            text="<img src='fake/app/path/static/fake_plot_var_colorbar.png'\>",
+            height=100,
+            width=800)
+
+    def test_update_colorbar_widget(self):
+        """
+        .. note:: update_colorbar_widget() is only called by
+                  set_var() which sets current_var
+        """
+        fixture = self.make_forest_plot()
+        fixture.create_colorbar_widget()
+        fixture.current_var = "current_var"  # simulate set_var()
+        fixture.update_colorbar_widget()
+        self.assertEqual(fixture.colorbar_widget.text,
+            "<img src='fake/app/path/static/current_var_colorbar.png'\>")
+
+    def make_forest_plot(self):
         # Model configuration details
         fake_config = "config"
         dataset = {fake_config: {"data_type_name": None}}
@@ -25,25 +45,21 @@ class TestForestPlot(unittest.TestCase):
         unit_dict = None
         unit_dict_display = None
         init_time = None
-        fixture = forest.plot.ForestPlot(dataset,
-                                         model_run_time,
-                                         po1,
-                                         figname,
-                                         plot_var,
-                                         conf1,
-                                         reg1,
-                                         rd1,
-                                         unit_dict,
-                                         unit_dict_display,
-                                         app_path,
-                                         init_time)
-        result = fixture.create_colorbar_widget()
-        self.assertIsInstance(result, bokeh.models.widgets.Div)
-        self.assertEqual(result.text,
-                "<img src='fake/app/path/static/fake_plot_var_colorbar.png'\>")
-        self.assertEqual(result.height, 100)
-        self.assertEqual(result.width, 800)
+        return forest.plot.ForestPlot(dataset,
+                                      model_run_time,
+                                      po1,
+                                      figname,
+                                      plot_var,
+                                      conf1,
+                                      reg1,
+                                      rd1,
+                                      unit_dict,
+                                      unit_dict_display,
+                                      app_path,
+                                      init_time)
 
-    def test_update_colorbar_widget(self):
-        # TODO: Add unit test to understand colorbar update call back
-        self.assertTrue(False)
+    def assert_div_has(self, div, text, width, height):
+        self.assertIsInstance(div, bokeh.models.widgets.Div)
+        self.assertEqual(div.text, text)
+        self.assertEqual(div.height, height)
+        self.assertEqual(div.width, width)
