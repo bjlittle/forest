@@ -85,7 +85,7 @@ def source_dict(color_map, x_min, x_max):
     x = np.linspace(x_min, x_max, color_map.N)
     return {
         "x": x,
-        "width": np.diff(x),
+        "width": np.full(len(x), x[1] - x[0]),
         "rgb_color": rgb(color_map.colors)
     }
 
