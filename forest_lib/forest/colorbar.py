@@ -58,20 +58,26 @@ class Colorbar(object):
         source = bokeh.models.ColumnDataSource(source_dict(color_map,
                                                            x_min,
                                                            x_max))
-        figure.rect(x="x",
-                    y=0.5,
-                    height=1.,
-                    width="width",
-                    color="color",
-                    source=source)
+        self.figure.rect(x="x",
+                         y=0.5,
+                         height=1.,
+                         width="width",
+                         color="color",
+                         source=source)
         self.source = source
+
+    @property
+    def widget(self):
+        """To conform to polymorphic Colorbar API expose self.widget"""
+        return self.figure
+
 
     def update(self, color_map, x_min, x_max):
         """Re-render colorbar using different color map and limits"""
         self.source.data = source_dict(color_map,
                                        x_min,
                                        x_max)
-        self.figure.xaxis.range = bokeh.models.Range1d(x_min, x_max)
+        self.figure.x_range = bokeh.models.Range1d(x_min, x_max)
 
 
 def source_dict(color_map, x_min, x_max):
@@ -106,5 +112,14 @@ def colorbar_figure():
 
 def rgb(colors):
     """Map color map colors to RGB Hexadecimal values"""
-    return ["#{:02x}{:02x}{:02x}".format(int(255 * r), int(255 * g), int(255 * b))
-            for r, g, b in colors]
+    texts = []
+    for color in colors:
+        if len(color) == 3:
+            r, g, b = color
+        else:
+            r, g, b, _ = color
+        text = "#{:02x}{:02x}{:02x}".format(int(255 * r),
+                                            int(255 * g),
+                                            int(255 * b))
+        texts.append(text)
+    return texts

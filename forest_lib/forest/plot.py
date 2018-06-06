@@ -89,6 +89,7 @@ class ForestPlot(object):
         self.unit_dict_display = unit_dict_display
         self.stats_widget = None
         self.colorbar = None
+        self.colorbar_mode = "dynamic"
 
         self.current_figsize = (8.0, 6.0)
         self.bokeh_fig_size = (800,600)
@@ -917,8 +918,15 @@ class ForestPlot(object):
 
     def create_colorbar_widget(self):
         '''Instantiate a colorbar instance related to the plot'''
-        self.colorbar = forest.StaticColorbar(self.app_path,
-                                              self.current_var)
+        if self.colorbar_mode == "static":
+            self.colorbar = forest.StaticColorbar(self.app_path,
+                                                  self.current_var)
+        else:
+            cmap = self.main_plot.get_cmap()
+            norm = self.main_plot.norm
+            self.colorbar = forest.Colorbar(cmap,
+                                            norm.vmin,
+                                            norm.vmax)
         return self.colorbar.widget
 
     def update_stats_widget(self):
@@ -936,7 +944,14 @@ class ForestPlot(object):
 
     def update_colorbar_widget(self):
         '''Delegate update to colorbar.update() methods'''
-        self.colorbar.update(self.current_var)
+        if self.colorbar_mode == "static":
+            self.colorbar.update(self.current_var)
+        else:
+            cmap = self.main_plot.get_cmap()
+            norm = self.main_plot.norm
+            self.colorbar.update(cmap,
+                                 norm.vmin,
+                                 norm.vmax)
 
     def set_data_time(self, new_time):
 
