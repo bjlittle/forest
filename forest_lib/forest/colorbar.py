@@ -7,6 +7,21 @@ bokeh.models.ColumnDataSource.
 
 The ColumnDataSource is used as the driving data for bokeh.plotting.Figure
 instance call to rect()
+
+.. note:: forest color maps and normalizations are computed in
+          forest.util.create_colour_opts() by calling
+          matplotlib.colors.from_levels_and_colors()
+
+.. note:: Color map extend "max", "min", "both" can be detected
+          through cmap.colorbar_extend which is set by
+          matplotlib.colors.from_levels_and_colors()
+
+.. note:: For a BoundaryNorm there is a norm.boundaries property
+          which can be used to set figure.rect() widths
+
+.. note:: In the case of extend "min" or "max", a triangle Glyph
+          should be added to indicate values outside range
+
 """
 import numpy as np
 import bokeh.models
@@ -46,7 +61,7 @@ class StaticColorbar(object):
 
 class Colorbar(object):
     """Forest colorbar widget"""
-    def __init__(self, color_map, x_min, x_max, figure=None):
+    def __init__(self, color_map, norm, figure=None):
         """Helper to generate a bokeh widget that acts like a colorbar
         """
         if figure is None:
@@ -55,9 +70,7 @@ class Colorbar(object):
             self.figure = figure
 
         # Relationship between data and colors
-        source = bokeh.models.ColumnDataSource(source_dict(color_map,
-                                                           x_min,
-                                                           x_max))
+        source = bokeh.models.ColumnDataSource(source_dict(color_map, norm))
         self.figure.rect(x="x",
                          y=0.5,
                          height=1.,
@@ -72,17 +85,15 @@ class Colorbar(object):
         return self.figure
 
 
-    def update(self, color_map, x_min, x_max):
+    def update(self, color_map, norm):
         """Re-render colorbar using different color map and limits"""
-        self.source.data = source_dict(color_map,
-                                       x_min,
-                                       x_max)
-        self.figure.x_range = bokeh.models.Range1d(x_min, x_max)
+        self.source.data = source_dict(color_map, norm)
+        self.figure.x_range = bokeh.models.Range1d(norm.vmin, norm.vmax)
 
 
-def source_dict(color_map, x_min, x_max):
+def source_dict(color_map, norm):
     """Create a ColumnDataSource dict from color map and x range"""
-    x = np.linspace(x_min, x_max, color_map.N)
+    x = np.linspace(norm.vmin, norm.vmax, color_map.N)
     return {
         "x": x,
         "width": np.full(len(x), x[1] - x[0]),

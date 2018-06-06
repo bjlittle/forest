@@ -924,9 +924,7 @@ class ForestPlot(object):
         else:
             cmap = self.main_plot.get_cmap()
             norm = self.main_plot.norm
-            self.colorbar = forest.Colorbar(cmap,
-                                            norm.vmin,
-                                            norm.vmax)
+            self.colorbar = forest.Colorbar(cmap, norm)
         return self.colorbar.widget
 
     def update_stats_widget(self):
@@ -949,9 +947,7 @@ class ForestPlot(object):
         else:
             cmap = self.main_plot.get_cmap()
             norm = self.main_plot.norm
-            self.colorbar.update(cmap,
-                                 norm.vmin,
-                                 norm.vmax)
+            self.colorbar.update(cmap, norm)
 
     def set_data_time(self, new_time):
 
