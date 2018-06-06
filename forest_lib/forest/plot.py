@@ -80,7 +80,6 @@ class ForestPlot(object):
         self.setup_pressure_labels()
         self.current_title = ''
         self.stats_string = ''
-        self.colorbar_link = plot_var + '_colorbar.png'
         self.bokeh_figure = None
         self.bokeh_image = None
         self.bokeh_img_ds = None
@@ -88,14 +87,19 @@ class ForestPlot(object):
         self.unit_dict = unit_dict
         self.unit_dict_display = unit_dict_display
         self.stats_widget = None
-        self.colorbar_widget = None
+        self.colorbar = None
 
         self.current_figsize = (8.0, 6.0)
         self.bokeh_fig_size = (800,600)
         self.coast_res = '50m'
         self.display_mode = ForestPlot.MODE_LOADING
 
-
+    @property
+    def colorbar_widget(self):
+        """Expose colorbar bokeh widget to applications"""
+        if self.colorbar is None:
+            return None
+        return self.colorbar.widget
 
     def _set_config_value(self, new_config):
 
@@ -910,25 +914,10 @@ class ForestPlot(object):
                                                      )
         return self.stats_widget
 
-    def create_colorbar(self):
-        """Interactive colorbar widget"""
-        self.colorbar_source = bokeh.models.ColumnDataSource()
-        self.colorbar_figure = bokeh.plotting.figure()
-
     def create_colorbar_widget(self):
-
-        '''
-
-        '''
-
-        colorbar_html = "<img src='" + self.app_path + "/static/" + \
-                        self.colorbar_link + "'\>"
-            
-        self.colorbar_widget = bokeh.models.widgets.Div(text=colorbar_html,
-                                                        height=100,
-                                                        width=800,
-                                                        )
-        return self.colorbar_widget
+        '''Instantiate a colorbar instance related to the plot'''
+        self.colorbar = forest.StaticColorbar(self.app_path,
+                                              self.current_var)
 
     def update_stats_widget(self):
 
@@ -944,21 +933,8 @@ class ForestPlot(object):
             print('Unable to update stats as stats widget not initiated')
 
     def update_colorbar_widget(self):
-
-        '''
-
-        '''
-
-        self.colorbar_link = self.current_var + '_colorbar.png'
-        colorbar_html = "<img src='" + self.app_path + "/static/" + \
-                        self.colorbar_link + "'\>"
-
-        print(colorbar_html)
-
-        try:
-            self.colorbar_widget.text = colorbar_html
-        except AttributeError as e1:
-            print('Unable to update colorbar as colorbar widget not initiated')
+        '''Delegate update to colorbar.update() methods'''
+        self.colorbar.update(self.current_var)
 
     def set_data_time(self, new_time):
 

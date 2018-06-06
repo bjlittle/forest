@@ -15,10 +15,34 @@ import bokeh.plotting
 
 __all__ = [
     "Colorbar",
+    "StaticColorbar",
     "rgb",
     "source_dict",
     "colorbar_figure"
 ]
+
+class StaticColorbar(object):
+    """Colorbar bokeh Div widget serving static images"""
+    def __init__(self, app_path, plot_var):
+        self.app_path = app_path
+        colorbar_link = plot_var + '_colorbar.png'
+        colorbar_html = "<img src='" + app_path + "/static/" + \
+                        colorbar_link + "'\>"
+        self.widget = bokeh.models.widgets.Div(text=colorbar_html,
+                                               height=100,
+                                               width=800)
+    def update(self, current_var):
+        """Update static colorbar image"""
+        colorbar_link = current_var + '_colorbar.png'
+        colorbar_html = "<img src='" + self.app_path + "/static/" + \
+                        colorbar_link + "'\>"
+
+        print(colorbar_html)
+
+        try:
+            self.widget.text = colorbar_html
+        except AttributeError as e1:
+            print('Unable to update colorbar as colorbar widget not initiated')
 
 class Colorbar(object):
     """Forest colorbar widget"""
