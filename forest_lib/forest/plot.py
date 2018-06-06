@@ -918,6 +918,7 @@ class ForestPlot(object):
         '''Instantiate a colorbar instance related to the plot'''
         self.colorbar = forest.StaticColorbar(self.app_path,
                                               self.current_var)
+        return self.colorbar.widget
 
     def update_stats_widget(self):
 
