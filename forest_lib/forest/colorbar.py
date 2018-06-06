@@ -62,7 +62,7 @@ class Colorbar(object):
                          y=0.5,
                          height=1.,
                          width="width",
-                         color="color",
+                         color="rgb_color",
                          source=source)
         self.source = source
 
@@ -86,7 +86,7 @@ def source_dict(color_map, x_min, x_max):
     return {
         "x": x,
         "width": np.diff(x),
-        "color": rgb(color_map.colors)
+        "rgb_color": rgb(color_map.colors)
     }
 
 
@@ -103,8 +103,8 @@ def colorbar_figure():
     # Hover tooltip
     hover = bokeh.models.HoverTool()
     hover.tooltips = [
-        ("value", "$value"),
-        ("color", "$color[hex, swatch]:fill_color")
+        ("value", "$x"),
+        ("color", "$color[hex, swatch]:rgb_color")
     ]
     figure.add_tools(hover)
     return figure
