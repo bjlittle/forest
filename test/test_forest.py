@@ -41,14 +41,6 @@ class TestForestColorbar(unittest.TestCase):
         self.assertEqual(figure.yaxis[0].visible, False)
         self.assertIsInstance(figure.tools[0], bokeh.models.HoverTool)
 
-    def test_create_colorbar_returns_bokeh_figure(self):
-        forest_plot = self.make_forest_plot()
-        forest_plot.create_colorbar()
-        self.assertIsInstance(forest_plot.colorbar_source,
-                              bokeh.models.ColumnDataSource)
-        self.assertIsInstance(forest_plot.colorbar_figure,
-                              bokeh.plotting.Figure)
-
     @unittest.skip("deprecated feature")
     def test_create_colorbar_widget(self):
         fixture = self.make_forest_plot()

@@ -14,6 +14,7 @@ import cartopy.crs
 import bokeh.models.widgets
 import bokeh.plotting
 
+import forest
 import forest.util
 import forest.data
 import forest.colorbar
