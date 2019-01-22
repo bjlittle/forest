@@ -5,3 +5,5 @@
 __pycache__
 kubeconfig
 *.swp
+node_modules
+.ipynb_checkpoints
