@@ -9,6 +9,7 @@ import numpy as np
 import warnings
 from forest.test import util
 
+SEA_FILE = "SEA_phi2km1p5_ra1t_20180821T0000Z.nc"
 
 class FakeLoader(object):
     def file_exists(self, path):
@@ -135,14 +136,14 @@ class TestForestDataset(unittest.TestCase):
         }
         self.assertEqual(result, expect)
 
+    @unittest.skipIf(not os.path.exists(SEA_FILE), "Skip file missing")
     def test_get_data_should_support_model_run_time(self):
         """Uses actual file to understand ForestDataset
 
         ..note:: Think about how best to unit test
                  ForestDataset.get_data()
         """
-        file_name = "SEA_phi2km1p5_ra1t_20180821T0000Z.nc"
-        dataset = forest.data.ForestDataset.convention(file_name,
+        dataset = forest.data.ForestDataset.convention(SEA_FILE,
                                                        self.bucket,
                                                        "ra1t")
         variable = "precipitation"
